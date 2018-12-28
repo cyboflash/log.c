@@ -130,7 +130,10 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
   if (L.fp) {
     va_list args;
     char buf[32];
-    buf[strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", lt)] = '\0';
+    n = strftime(buf, sizeof(buf), "%F %T", &lt);
+    if (sizeof(buf) > n)
+        snprintf(&buf[n], sizeof(buf)-n, ".%06ld", tv.tv_usec);
+    buf[sizeof(buf)-1] = '\0';
     fprintf(L.fp, "%s %-5s %s:%d: ", buf, level_names[level], file, line);
     va_start(args, fmt);
     vfprintf(L.fp, fmt, args);
