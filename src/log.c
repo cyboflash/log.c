@@ -96,14 +96,20 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
   lock();
 
   /* Get current time */
-  time_t t = time(NULL);
-  struct tm *lt = localtime(&t);
+  struct tm *lt;
+  struct timeval tv;
+
+  gettimeofday(&tv, NULL);
+  lt = localtime(&tv.tv_sec);
 
   /* Log to stderr */
   if (!L.quiet) {
     va_list args;
-    char buf[16];
-    buf[strftime(buf, sizeof(buf), "%H:%M:%S", lt)] = '\0';
+    char buf[27];
+    size_t n;
+    n = strftime(buf, sizeof(buf), "%F %T", lt);
+    strftime(&buf[n], sizeof(buf)-n, ".%06ld", tv.tv_usec);
+    buf[sizeof(buf)-1] = '\0';
 #ifdef LOG_USE_COLOR
     fprintf(
       stderr, "%s %s%-5s\x1b[0m \x1b[90m%s:%d:\x1b[0m ",
