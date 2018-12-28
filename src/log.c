@@ -99,6 +99,7 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
   /* Get current time */
   struct tm lt;
   struct timeval tv;
+  size_t n;
 
   gettimeofday(&tv, NULL);
   localtime_r(&tv.tv_sec, &lt);
@@ -107,7 +108,6 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
   if (!L.quiet) {
     va_list args;
     char buf[27];
-    size_t n;
     n = strftime(buf, sizeof(buf), "%F %T", &lt);
     if (sizeof(buf) > n)
         snprintf(&buf[n], sizeof(buf)-n, ".%06ld", tv.tv_usec);
