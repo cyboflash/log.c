@@ -108,7 +108,7 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
     char buf[27];
     size_t n;
     n = strftime(buf, sizeof(buf), "%F %T", lt);
-    strftime(&buf[n], sizeof(buf)-n, ".%06ld", tv.tv_usec);
+    sprintf(&buf[n], sizeof(buf)-n, ".%06ld", tv.tv_usec);
     buf[sizeof(buf)-1] = '\0';
 #ifdef LOG_USE_COLOR
     fprintf(
