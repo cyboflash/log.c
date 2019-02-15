@@ -80,6 +80,8 @@ void log_set_fp(FILE *fp) {
 
 void log_set_level(int level) {
   L.level = level;
+  if (level < 0)
+      log_set_quiet(1);
 }
 
 
